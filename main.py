@@ -19,7 +19,12 @@ app.add_middleware(
 
 @app.on_event("startup")
 def startup_event():
-    load_artifacts()
+    try:
+        load_artifacts()
+        print("✅ Model loaded successfully")
+    except Exception as e:
+        print("❌ Model load failed:", e)
+
 
 
 @app.get("/")
@@ -28,8 +33,8 @@ def test():
         status_code=200, content={"success": True, "message": "this is test route"}
     )
 
-
+ 
 @app.post("/predict", response_model=PredictionResponse)
 def predict(features: CarFeatures):
     price = predict_price(features.model_dump())
-    return PredictionResponse(prediction_price=price)
+    return PredictionResponse(prediction_price = price)
